@@ -21,9 +21,27 @@ class Mtgox extends PaymentModule
 
     public function install()
     {
-        if (parent::install() == false || !$this->registerHook('payment'))
+        if (parent::install() == false OR
+                !$this->registerHook('payment') OR
+                !Configuration::updateValue('MTGOX_MERCHANT_ID', '0') OR
+                !Configuration::updateValue('MTGOX_API_KEY', '0') OR
+                !Configuration::updateValue('MTGOX_API_SECRET_KEY', '0') OR
+                !Configuration::updateValue('MTGOX_EMAIL_ON_SUCCESS', '1') OR
+                !Configuration::updateValue('MTGOX_AUTOSELL', '1') OR
+                !Configuration::updateValue('MTGOX_INSTANT_ONLY', '0'))
             return false;
         return true;
+    }
+
+    public function uninstall()
+    {
+        return (parent::uninstall() AND
+            Configuration::deleteByName('MTGOX_MERCHANT_ID') AND
+            Configuration::deleteByName('MTGOX_API_KEY') AND
+            Configuration::deleteByName('MTGOX_API_SECRET_KEY') AND
+            Configuration::deleteByName('MTGOX_EMAIL_ON_SUCCESS') AND
+            Configuration::deleteByName('MTGOX_AUTOSELL') AND
+            Configuration::deleteByName('MTGOX_INSTANT_ONLY'));
     }
 
     public function hookPayment()
@@ -31,14 +49,6 @@ class Mtgox extends PaymentModule
         global $smarty;
 
         return $this->display(__FILE__, 'views/mtgox.tpl');
-    }
-
-    public function uninstall()
-    {
-        if (!parent::uninstall())
-            Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'mtgox`');
-
-        parent::uninstall();
     }
 
     public function preparePayment($cart)
