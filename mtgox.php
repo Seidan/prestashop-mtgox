@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('_PS_VERSION_'))
     exit;
 
@@ -29,7 +30,7 @@ class Mtgox extends PaymentModule
     {
         global $smarty;
 
-        return $this->display(__FILE__, 'mtgox.tpl');
+        return $this->display(__FILE__, 'views/mtgox.tpl');
     }
 
     public function uninstall()

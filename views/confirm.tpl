@@ -8,7 +8,7 @@
 {include file="$tpl_dir./order-steps.tpl"}
 
 <p>
-    <img src="logo-checkout.png" alt="{l s='MtGox Payment' mod='mtgox'}" style="margin-bottom: 5px" />
+    <img src="images/logo-checkout.png" alt="{l s='MtGox Payment' mod='mtgox'}" style="margin-bottom: 5px" />
     <br />{l s='You have chosen to pay with MtGox.' mod='mtgox'}
     <br />
 </p>

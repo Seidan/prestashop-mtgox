@@ -15,6 +15,6 @@ $mtgox->preparePayment($cart);
 
 include(dirname(__FILE__).'/../../header.php');
 
-echo $mtgox->display('mtgox.php', 'confirm.tpl');
+echo $mtgox->display('mtgox.php', 'views/confirm.tpl');
 
 include_once(dirname(__FILE__).'/../../footer.php');
