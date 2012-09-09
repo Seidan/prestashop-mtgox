@@ -11,7 +11,7 @@ if (_PS_VERSION_ >= '1.5' && !Context::getContext()->customer->isLogged(true))
 else if (_PS_VERSION_ < '1.5' && !$cookie->isLogged(true))
     Tools::redirect('authentication.php?back=order.php');
 
-$mtgox->preparePayment();
+$mtgox->preparePayment($cart);
 
 include(dirname(__FILE__).'/../../header.php');
 

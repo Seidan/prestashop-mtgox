@@ -40,7 +40,11 @@ class Mtgox extends PaymentModule
         parent::uninstall();
     }
 
-    public function preparePayment()
+    public function preparePayment($cart)
     {
+        global $smarty;
+        $smarty->assign(array(
+            'total' => $cart->getOrderTotal(),
+        ));
     }
 }
