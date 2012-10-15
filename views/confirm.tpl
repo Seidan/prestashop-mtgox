@@ -1,4 +1,3 @@
-{debug}
 {capture name=path}<a href="{$base_dir_ssl}order.php">{l s='Your shopping cart' mod='mtgox'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='MtGox Payment' mod='mtgox'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
@@ -14,7 +13,7 @@
 </p>
 <p style="margin-top:20px;">
     {l s='The total amount of your order is' mod='mtgox'}
-        <span class="price">{convertPriceWithCurrency price=$total currency=$currency}</span> {if $taxes == 1}{l s='(tax incl.)' mod='mtgox'}{/if}
+        <span class="price">{convertPriceWithCurrency price=$total currency=$currency}</span>
     <br /><br />
 </p>
 <p>
@@ -24,5 +23,3 @@
     <a href="{$base_dir_ssl}order.php?step=3" class="button_large">{l s='Other payment methods' mod='mtgox'}</a>
     <a href="{$base_dir_ssl}modules/mtgox/payment.php?step=checkout" class="exclusive_large">{l s='I confirm my order' mod='mtgox'}</a>
 </p>
-
-{$MtGoxExtraForm}

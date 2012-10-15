@@ -42,6 +42,7 @@ class Mtgox extends PaymentModule
             $orderState->save();
 
             Configuration::updateValue('MTGOX_PENDING_STATE_ID', $orderState->id);
+            copy(dirname(__FILE__).'/logo.gif', dirname(__FILE__).'/../../img/os/'.(int) $orderState->id.'.gif');
         }
 
         if (parent::install() == false OR
@@ -164,20 +165,13 @@ class Mtgox extends PaymentModule
      * @throws Exception
      */
     public function checkout($total, $id, $currency, $base_dir_ssl) {
-        if ($this->validateOrder($id, (int)Configuration::get('MTGOX_PENDING_STATE_ID'), 0, 'MtGox') === true) {
-            // prestashop validateOrder is a pain
-            // we're stuck to set AGAIN the correct status as it won't take ours
-            $order = new Order((int)$this->currentOrder);
-            $order->setCurrentState(Configuration::get('MTGOX_PENDING_STATE_ID'));
-            $order->save();
-
             $request = array(
                 'amount'         => $total,
                 'currency'       => $currency,
-                'description'    => Tools::safeOutput(Configuration::get('MTGOX_PAYMENT_DESCRIPTION')).' Order #'.(int)$this->currentOrder,
-                'data'           => $this->currentOrder,
+                'description'    => Tools::safeOutput(Configuration::get('MTGOX_PAYMENT_DESCRIPTION')).' Cart #'.$id,
+                'data'           => $id,
                 'return_success' => $base_dir_ssl.'modules/mtgox/payment.php?step=success',
-                'return_failure' => $base_dir_ssl.'modules/mtgox/payment.php?step=failure&order='.(int)$this->currentOrder,
+                'return_failure' => $base_dir_ssl.'modules/mtgox/payment.php?step=failure',
                 'ipn'            => $base_dir_ssl.'modules/mtgox/payment.php?step=callback'
             );
 
@@ -188,24 +182,45 @@ class Mtgox extends PaymentModule
             $request['instant_only'] = (bool)Configuration::get('MTGOX_INSTANT_ONLY');
 
             return MtgoxApi::mtgoxQuery(MtgoxApi::API_ORDER_CREATE, Configuration::get('MTGOX_API_KEY'), Configuration::get('MTGOX_API_SECRET_KEY'), $request);
-        } else {
-            throw new \Exception('Could not place the order. Please try again or contact the store owner.');
-        }
     }
 
     /**
-     * Cancel order given its id
+     * Parse IPN Request
      *
-     * @param integer $id   Order id
-     * @return boolean
+     * @param array $post   Post data
+     * @return integer      Status code
      */
-    public function cancelOrder($id)
+    public function parseIpn($post)
     {
-        $order = new Order($id);
-        $order->setCurrentState(6);
-        $order->save();
+        $apiKey       = Configuration::get('MTGOX_API_KEY');
+        $apiSecretKey = Configuration::get('MTGOX_API_SECRET_KEY');
+        $postData     = file_get_contents("php://input");
 
-        return true;
+        $goodSign = hash_hmac('sha512', $postData, base64_decode($apiSecretKey), TRUE);
+        $sign = base64_decode($_SERVER['HTTP_REST_SIGN']);
+
+        if ($sign == $goodSign) {
+            $status      = $post['status'];
+            $cartId      = trim(stripslashes($post['data']));
+            $cart        = new Cart($cartId);
+
+            switch ($status) {
+                case 'paid':
+                    if ($this->validateOrder($cartId, 2, $cart->getOrderTotal(), 'MtGox Id# '.$post['payment_id']) == true) {
+                        echo '[OK]';
+                    }
+
+                    break;
+                case 'partial':
+                    echo '[OK]';
+                    break;
+                case 'cancelled':
+                    echo '[OK]';
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     /**

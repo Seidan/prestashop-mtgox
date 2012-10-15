@@ -6,13 +6,18 @@ include_once(dirname(__FILE__).'/mtgox.php');
 
 $mtgox = new Mtgox();
 
-if (_PS_VERSION_ >= '1.5' && !Context::getContext()->customer->isLogged(true))
-    Tools::redirect('index.php?controller=authentication&back=order.php');
-else if (_PS_VERSION_ < '1.5' && !$cookie->isLogged(true))
-    Tools::redirect('authentication.php?back=order.php');
+$step = isset($_GET['step']) ? $_GET['step'] : null;
+
+if ($step != 'callback') {
+    if (_PS_VERSION_ >= '1.5' && !Context::getContext()->customer->isLogged(true))
+        Tools::redirect('index.php?controller=authentication&back=order.php');
+    else if (_PS_VERSION_ < '1.5' && !$cookie->isLogged(true))
+        Tools::redirect('authentication.php?back=order.php');
+}
 
 $mtgox->preparePayment($cart);
-switch ($_GET['step']) {
+
+switch ($step) {
     case 'checkout':
         $response = $mtgox->checkout($cart->getOrderTotal(), $cart->id, $currency->iso_code, $smarty->tpl_vars['base_dir_ssl']->value);
 
@@ -30,11 +35,11 @@ switch ($_GET['step']) {
         break;
     case 'failure':
         include_once(dirname(__FILE__).'/../../header.php');
-        $mtgox->cancelOrder($_GET['order']);
         echo $mtgox->display('mtgox.php', 'views/failure.tpl');
         include_once(dirname(__FILE__).'/../../footer.php');
         break;
     case 'callback':
+        $mtgox->parseIpn($_POST);
         break;
     default:
         include(dirname(__FILE__).'/../../header.php');

@@ -1,4 +1,3 @@
-{debug}
 {capture name=path}<a href="{$base_dir_ssl}order.php">{l s='Your shopping cart' mod='mtgox'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='MtGox Payment' mod='mtgox'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
