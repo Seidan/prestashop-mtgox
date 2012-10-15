@@ -22,7 +22,7 @@
 </p>
 <p class="cart_navigation">
     <a href="{$base_dir_ssl}order.php?step=3" class="button_large">{l s='Other payment methods' mod='mtgox'}</a>
-    <a href="#" class="exclusive_large" onclick="$('#mtgox_form').submit();return false;">{l s='I confirm my order' mod='mtgox'}</a>
+    <a href="{$base_dir_ssl}modules/mtgox/payment.php?step=checkout" class="exclusive_large">{l s='I confirm my order' mod='mtgox'}</a>
 </p>
 
 {$MtGoxExtraForm}
