@@ -149,12 +149,12 @@ class Mtgox extends PaymentModule
      * @return array
      * @throws Exception
      */
-    public function checkout($total, $id, $currency, $callbackUrl) {
+    public function checkout($total, $id, $currency, $secureKey, $callbackUrl) {
             $request = array(
                 'amount'         => $total,
                 'currency'       => $currency,
                 'description'    => Tools::safeOutput(Configuration::get('MTGOX_PAYMENT_DESCRIPTION')).' Cart #'.$id,
-                'data'           => $id,
+                'data'           => $id.','.$secureKey,
                 'return_success' => $callbackUrl.'?step=success',
                 'return_failure' => $callbackUrl.'?step=failure',
                 'ipn'            => $callbackUrl.'?step=callback'
@@ -186,12 +186,14 @@ class Mtgox extends PaymentModule
 
         if ($sign == $goodSign) {
             $status      = $post['status'];
-            $cartId      = trim(stripslashes($post['data']));
+            $data        = explode(',', trim(stripslashes($post['data'])));
+            $cartId      = $data[0];
+            $secureKey  = $data[1];
             $cart        = new Cart($cartId);
 
             switch ($status) {
                 case 'paid':
-                    if ($this->validateOrder($cartId, 2, $cart->getOrderTotal(), 'MtGox', 'Transaction Id: '.$post['payment_id'].' ') == true) {
+                    if ($this->validateOrder($cartId, 2, $cart->getOrderTotal(), 'MtGox', 'Transaction Id: '.$post['payment_id'].' ', array(), null, false, $secureKey) == true) {
                         echo '[OK]';
                     }
 

@@ -38,7 +38,7 @@ class MtgoxPaymentModuleFrontController extends ModuleFrontController
 
         switch ($step) {
             case 'checkout':
-                $response = $this->module->checkout($cart->getOrderTotal(), $cart->id, $currency->iso_code, $this->context->link->getModuleLink('mtgox', 'payment'));
+                $response = $this->module->checkout($cart->getOrderTotal(), $cart->id, $currency->iso_code, $this->context->customer->secure_key, $this->context->link->getModuleLink('mtgox', 'payment'));
 
                 if ($response['result'] == "success") {
                     header('Location: '.$response['return']['payment_url']);
