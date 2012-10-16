@@ -191,7 +191,7 @@ class Mtgox extends PaymentModule
 
             switch ($status) {
                 case 'paid':
-                    if ($this->validateOrder($cartId, 2, $cart->getOrderTotal(), 'MtGox Id# '.$post['payment_id']) == true) {
+                    if ($this->validateOrder($cartId, 2, $cart->getOrderTotal(), 'MtGox', 'Transaction Id: '.$post['payment_id'].' ') == true) {
                         echo '[OK]';
                     }
 

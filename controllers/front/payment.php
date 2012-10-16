@@ -44,7 +44,7 @@ class MtgoxPaymentModuleFrontController extends ModuleFrontController
                     header('Location: '.$response['return']['payment_url']);
                     exit;
                 } else {
-                    die('could not checkout');
+                    exit('Fatal error. Could not checkout. Please try again');
                 }
                 break;
             case 'success':
