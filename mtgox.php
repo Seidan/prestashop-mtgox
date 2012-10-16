@@ -126,7 +126,7 @@ class Mtgox extends PaymentModule
             'errors'             => $errors
         ));
 
-        return $this->display(__FILE__, 'views/configure.tpl');
+        return $this->display(__FILE__, 'views/templates/back/configure.tpl');
     }
 
     /**
@@ -136,22 +136,7 @@ class Mtgox extends PaymentModule
     {
         global $smarty;
 
-        return $this->display(__FILE__, 'views/mtgox.tpl');
-    }
-
-    /**
-     * Prepare for payment and assign the total to the template
-     *
-     * @param Cart $cart    Prestashop cart
-     * @return void
-     */
-    public function preparePayment($cart)
-    {
-        global $smarty;
-
-        $smarty->assign(array(
-            'total' => $cart->getOrderTotal(),
-        ));
+        return $this->display(__FILE__, 'views/templates/hook/payment.tpl');
     }
 
     /**
@@ -164,15 +149,15 @@ class Mtgox extends PaymentModule
      * @return array
      * @throws Exception
      */
-    public function checkout($total, $id, $currency, $base_dir_ssl) {
+    public function checkout($total, $id, $currency, $callbackUrl) {
             $request = array(
                 'amount'         => $total,
                 'currency'       => $currency,
                 'description'    => Tools::safeOutput(Configuration::get('MTGOX_PAYMENT_DESCRIPTION')).' Cart #'.$id,
                 'data'           => $id,
-                'return_success' => $base_dir_ssl.'modules/mtgox/payment.php?step=success',
-                'return_failure' => $base_dir_ssl.'modules/mtgox/payment.php?step=failure',
-                'ipn'            => $base_dir_ssl.'modules/mtgox/payment.php?step=callback'
+                'return_success' => $callbackUrl.'?step=success',
+                'return_failure' => $callbackUrl.'?step=failure',
+                'ipn'            => $callbackUrl.'?step=callback'
             );
 
             $request['autosell'] = (bool)Configuration::get('MTGOX_AUTOSELL');

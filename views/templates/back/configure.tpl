@@ -8,7 +8,7 @@
 <h2>{$displayName}</h2>
     <form action="{$requestUrl}" method="POST">
         <fieldset>
-        <legend><img src="{$base_dir_ssl}../modules/mtgox/logo.gif" />{l s='Settings' mod='mtgox'}</legend>
+        <legend><img src="../modules/mtgox/logo.gif" />{l s='Settings' mod='mtgox'}</legend>
             <label>
                 {l s='Merchant ID' mod='mtgox'}
             </label>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <module>
+            <name>mtgox</name>
+            <displayName><![CDATA[MtGox Payment Gateway]]></displayName>
+            <version><![CDATA[1]]></version>
+            <description><![CDATA[MtGox allow you to accept bitcoin payments through its platform.]]></description>
+            <author><![CDATA[MtGox]]></author>
+            <tab><![CDATA[payments_gateways]]></tab>
+            <is_configurable>1</is_configurable>
+            <need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+        </module>

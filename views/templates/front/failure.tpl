@@ -7,12 +7,12 @@
 {include file="$tpl_dir./order-steps.tpl"}
 
 <p>
-    <img src="images/logo-checkout.png" alt="{l s='MtGox Payment' mod='mtgox'}" style="margin-bottom: 5px" />
+    <img src="{$base_dir_ssl}modules/mtgox/images/logo-checkout.png" alt="{l s='MtGox Payment' mod='mtgox'}" style="margin-bottom: 5px" />
     <br />{l s='You have chosen to pay with MtGox.' mod='mtgox'}
     <br />
 </p>
 <p style="margin-top:20px;">
-    <b>{l s='Your order was succesfuly placed. You will recieve a mail when the payment is fully accepted.' mod='mtgox'}</b>
+    <b style="color: red;">{l s='Unfortunately, the payment showed either a failure nor a cancelation. Please place again your order or contact the store owner if you believe this is an error.' mod='mtgox'}</b>
     <br /><br />
 </p>
 <p class="cart_navigation">
